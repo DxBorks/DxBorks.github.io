@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+h1{
+  color:red;
+}
+.Bowie{
+  color:purple;
+}
+.Jagger{
+  color:gold;
+}
+.Slash{
+  color:silver;
+}
+.Hendrix{
+  color:navy;
+  size:bold;
+}
+.BigSmoke{
+  color:SeaGreen;
+}
+.Santana{
+  color:Darkred;
+  }
+td,th{
+   border:1px solid black;
+  } 
+table{
+   border-collapse:collapse;
+  }
+</style>
+  <title> Documentation de l'OS DxBorks (Version Française) </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>
+  <ul> <h1> Partie 1 : Introduction </ul> </h1>
+  <ol> <h3>
+    <li> Préface </li>
+    <li> Comprendre DxBorks </li>
+    <li> Installer DxBorks </li> </ol> </h3>
+  <ul> <h1> Partie 2 : </ul> </h1>
+<h3 class=BigSmoke> Préface : </h3>
+<p>
+ Le système d'exploitation DxBorks est une longue quête de succès d'un an. Né de l'envie de créer un Kernel minimaliste pour les appareils x86, l'OS a évolué en un projet avec pleins de possibilités, tout en gardant sa "preuve de concept" en tant qu'autre chose qu'un OS commercial. Agréé sous la License Publique Générale (GPL) GPU v3, tout le monde est libre d'utiliser cet OS comme ils veulent, dans la mesure où ils n'empêchent pas d'autres utilisateur de jouir de la même liberté. </br>
+ <br> DxBorks est un logiciel assez minimaliste. Il suit un paradigme important à mes yeux : KISS (Keep It Simple, Stupid !)/(Garde ça Simple, Imbécile); un paradigme utilisé par beaucoup de développeurs, ingénieurs et autres individus qui conçoivent du hardware/software complexes, dont l'équipe de développement d'Arch Linux ou les ingénieurs de l'armée Américaine. </br> 
+ <br> Ce paradigme donne la priorité à la simplicité plutôt qu'à la complexité : un bout de code devrait être assez facile à comprendre pour qu'il n'y ait pas l'usage d'un nombre trop important de commentaires. La "Philosophie UNIX" a aussi été un aspect très fondamental du projet : un outil devrait servir à une seule chose, mais le faire bien. Dans notre cas, les outils sont les fonctions, variables, algorithmes, etc... </br>
+ <br> Pour résumer, DxBorks est un autre Kernel inspiré par UNIX, tout en gardant son aspect de projet scolaire </br> </p>
+ <br> <br> <br> <h5 class=Santana> Comme indiqué plus haut, ce document, le Kernel DxBorks, son image disque, et les contenus de son répertoire en ligne sont agrées sous la licence GNU GPL v3. Référez vous au fichier fourni pour plus d'infomations concernant la licence. Pour plus d'informations, contactez "garuda1@protomail.com" </h5> </br> </br> </br>
+<h3 class=BigSmoke> Comprendre DxBorks </h3>
+<p>
+  DxBorks, en utilisant les philosophies KISS et UNIX, reste un système d'exploitation, c'est à dire qu'il va quand même être un logiciel complexe. Donc, il requiert une compréhension profonde de l'architecture x86, en même temps que quelques années d'expérience en C et en programmation d'Assembleur. Sachant que la plupart des utilisateurs n'auront surement pas ces qualifications, ce document va présenter une grande insistance sur l'explication dee la mécanique interne de l'OS DxBorks grâce à des exemples, analyse de code, et des transcriptions algorithmiques détaillées de parties particulières du code pour aider les utilisateurs à comprendre l'OS. </br>
+  <br> Néanmoins, cette documentation n'est PAS un tutoriel en programmation. Pour le moment, les choses suivantes sont considérées acquises :
+  <ul>
+    <li> Le lecteur a une compréhension basique de la programmation syntaxe assembleur x86. </li>
+    <li> Le lecteur a des connaissances avancées de la programmation en langage C, l'interface POSIX, l'architecture x86 et 32 bits, et la programmation makefile. </li>
+    <li> Le lecteur a accès à une machine capable de lancer DxBorks, ainsi que l'OS DxBorks lui même, et a une compréhension avancée de ce logiciel </li> </ul>
+  Pour comprendre complètement le code, vous pouvez considérer de bricoler avec. Le code source de DxBorks est disponible sur <b>GitHub</b>, au lien <a href="https://github.com/DxBorks/DxBorks"> <b> https://github.com/Garudal/DxBorks </a> </b>. Pour reproduire le code source du lien vers une machine basée sur UNIX en utilisant <b>git</b>, utilisez la commande suivante : </p>
+<h4 class=Hendrix> <br> $ git clone <a href="https://github.com/DxBorks/DxBorks"; class=Bowie> https://github.com/Garudal/DxBorks </a> </br> </br> </h4>
+<p>
+  Faire ceci téléchargera un dossier dans le répertoire de travail actuel contenant la dernière version du code source du système d'exploitation DxBorks. Les instructions de compilation sont décrites plus tard dans cette documentation. </p>
+<br> <br> <h3 class=BigSmoke>  Installer DxBorks </h3>
+<p>
+  DxBorks, en tant qu'OS en open source (ou plus particulièrement gratuit), peut être compilé et installé par l'utilisateur, alors que la plupart des autres systèmes d'exploitation sont distribués avec un logiciel d'installation automatisée. Comme cela contredit l'aspect minimaliste de DxBorks, aucun logiciel d'installation automatisée ne sera fourni
+  <br> Compiler DxBorks demande plusieurs composants différentes, dont :
+  <ul>
+    <li> Un système hôte UNIX (on utilisera Arch Linux) </li>
+    <li> GNU make </li>
+    <li> Le GCC (Gnu Compiler Collection) compilateur en C (<b>gcc</b>) </li>
+    <li> L'assembleur GNU standard (<b>as</b>) </li>
+    <li> Le chargeur d'amorçage (bootloader) GRUB2 </li>
+    <li> Une connection internet :) </li> </ul>
+  Plusieurs autres outils sont requis, vous serez donc notifiés durant la compilation quels composants manquent dans le système hôte.
+  <br> <br> Vous devrez d'abord acquérir les <b> fichiers source DxBorks </b>. Si vous utilisez la version CD (Compact Disc), le code source DxBorks est situé dans <b>/src/</b>, autrement l'utilisateur devra le télécharger en utilisant <b>git</b>. </p>
+<h4 class=Hendrix> <br> $ git clone <a href="https://github.com/Garudal/DxBorks"; class=Bowie> https://github.com/Garudal/DxBorks </a> </br> </br> </h4>
+<p>
+  <i> Note : Assurez vous de garder une sauvegarde du code source. Il vous faudra peut-être recommencer toute la compilation si vous ratez ne serait-ce qu'une partie de cette dernière. </i>
+  <br> <br> Vous pouvez dorénavant naviguer vers le répertoire source. Pour des raisons pratiques, on présumera qu'il est situé dans : </p>
+<h4 class=Hendrix> /home/user/Documents/src. </h4>
+<p>
+  Le processus de compilation est simple : un Makefile est situé dans le fichier <b>src</b>, qui automatise le processus de compilation. Notez que le Makefile utilise des extensions GNU, donc vous pourriez aussi télécharger le <b>Gnu make</b> en utilisant votre gestionnaire de paquets. Utilisez donc tout simplement les commandes suivantes :
+  <table>
+   <tr>
+     <td class=Hendrix> $ make </td>
+     <td> Compile DxBorks </td> </tr>
+    <tr>
+      <td class=Hendrix> $ make clean </td>
+      <td> Supprime l'objet et les fichiers binaire </td>
+    <tr>
+      <td class=Hendrix> $ make re </td>
+      <td> Alias pour <a class=Hendrix> $ make clean && make </a> </td> </tr>
+    <tr>
+      <td class=Hendrix> $ make test </td>
+      <td> Lance une machine virtuelle qemu faisant tourner DxBorks </td> </tr> </table>
+<p> Vous devriez peut-être aussi comprendre l'arborescence de répertoire : </p>
+<p> 
+  <ul> 
+    <li> Répertoire principal --> </li>
+    <div style="text-indent: 30px;"> <li> Fichiers binaires --> </li> </div>
+    <div style="text-indent: 60px;"> <li> Fichiers d'image disque </li> 
+    <li> Fichiers compilés et image disque .iso </li> </div>
+   <div style="text-indent: 30px;"> <li> Code source Kernel --> </li> </div> 
+    <div style="text-indent: 60px;"> <li> Fichiers source (.c et .s) -->  </li> </div>
+    <div style="text-indent: 85px;"> <li> Fichiers source i386 --> </li> </div>
+    <div style="text-indent: 100px;"> <li> Sources libk (Kernel Library) --> </div>
+    <div style="text-indent: 120px;"> <li> ... </li> </div>
+    <div style="text-indent: 100px;"> <li> Code qui permet d'initialiser DxBorks --> </li> </div>
+    <div style="text-indent: 120px;"> <li> ... </li> </div>
+    <div style="text-indent: 100px;"> <li> ... </li> </div>
+    <div style="text-indent: 30px;"> <li> En-têtes C (.h) --> </li> </div>
+    <div style="text-indent: 60px;"> <li> En-têtes Kernel --> </li> </div>
+    <div style="text-indent: 85px;"> <li> ... </li> </div>
+    <div style="text-indent: 60px;"> <li> ... </li> </div>
+    <div style="text-indent: 30px;"> <li> ... </li> </div> </ul>
+<p>
+  Cette arborescence de répertoire est, tout comme DxBorks lui même, minimaliste. Remarque : L'arborescence de répertoire peut changer d'une verion à une autre, donc ne basez pas vos commandes dessus, mais analysez le plutôt pour comprendre la structure des sources.
+ <br> <br> Après avoir compilé le programme, une image disque .iso sera produite et stockée dans le <a class=Hendrix> /src/bin </a> 
+</body>
+</html>
