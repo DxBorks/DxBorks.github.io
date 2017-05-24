@@ -164,6 +164,7 @@ Annexe 2 :
 26	    *(.bss)
 27	  }
 28	}
+
 Annexe 3 : 
 
 	ADRESSE			DESCRIPTION
@@ -208,14 +209,8 @@ Annexe 4 :
 
 
 
-
-
-
-
-
-
-
 Annexe 5 : 
+
 23	_start:
 24	  cli
 25	  movl $stack, %esp
