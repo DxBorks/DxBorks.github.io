@@ -16,6 +16,8 @@ Comme indiqué plus haut, ce document, le Kernel DxBorks, son image disque, et l
 
 [Instruction set](https://dxborks.github.io/instructions.html)
 
+[Mentions légales](https://github.com/DxBorks/DxBorks.github.io/blob/master/LICENSE)
+
 
 Comprendre DxBorks
 
@@ -64,15 +66,18 @@ Vous pouvez dorénavant naviguer vers le répertoire source. Pour des raisons pr
 Le processus de compilation est simple : un Makefile est situé dans le fichier src, qui automatise le processus de compilation. Notez que le Makefile utilise des extensions GNU, donc vous pourriez aussi télécharger le Gnu make en utilisant votre gestionnaire de paquets. Utilisez donc tout simplement les commandes suivantes :
 
 $ make     Compile DxBorks
+
 $ make clean     Supprime l'objet et les fichiers binaire
+
 $ make re     Alias pour "$ make clean && make"
+
 $ make test     Lance une machine virtuelle qemu faisant tourner DxBorks
 
-Vous pouvez aussi comprendre l'arbre de répertoire suivant : 
+
+Vous pouvez aussi prendre connaissance de l'arbre de répertoire suivant : 
 
 
 Annexe 1
-
 
 
 Après avoir compilé le programme, une image disque .iso sera produite et stockée dans le répertoire /src/bin. Cette image peut soit être démarrée directement en utilisant le cible make test, ou copiée sur un objet (physique) pour la démarrer sur une autre machine. Pour ce faire, utilisez la commande : 
@@ -227,5 +232,4 @@ START
 	CALL THE FUNCTION kernel_main
 	SET_INTERRUPT_FLAGS
 	HALT
-
 
