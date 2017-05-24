@@ -8,4 +8,6 @@ Overhaul, DxBorks is just another kernel inspired by UNIX, while keeping its sch
 
 [Download DxBorks](https://github.com/DxBorks/DxBorks)
 
+[Instruction set](https://dxborks.github.io/instructions.html)
+
 contact email: garuda1@protonmail.com
