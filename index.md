@@ -88,8 +88,11 @@ $ dd if=$SRC/bin/$ISO of=/dev/$DEV
 Où : 
 
 $SRC est le chemin pour le dossier src
+
 $ISO est le nom de l'image disque .iso
+
 $DEV est le nom du dispositif de bloc cible
+
 
 
 
