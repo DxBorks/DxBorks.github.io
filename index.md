@@ -19,6 +19,7 @@ Comme indiqué plus haut, ce document, le Kernel DxBorks, son image disque, et l
 [Mentions légales](https://github.com/DxBorks/DxBorks.github.io/blob/master/LICENSE)
 
 
+
 Comprendre DxBorks
 
 
@@ -36,6 +37,7 @@ Pour comprendre complètement le code, vous pouvez considérer de bricoler avec.
 $ git clone https://github.com/Garudal/DxBorks
 
 Faire ceci téléchargera un dossier dans le répertoire de travail actuel contenant la dernière version du code source du système d'exploitation DxBorks. Les instructions de compilation sont décrites plus tard dans cette documentation.
+
 
 
 Installer DxBorks
@@ -76,37 +78,62 @@ $ make test     Lance une machine virtuelle qemu faisant tourner DxBorks
 
 Vous pouvez aussi prendre connaissance de l'arbre de répertoire suivant : 
 
-
-Annexe 1
+(Annexe 1)
 
 
 Après avoir compilé le programme, une image disque .iso sera produite et stockée dans le répertoire /src/bin. Cette image peut soit être démarrée directement en utilisant le cible make test, ou copiée sur un objet (physique) pour la démarrer sur une autre machine. Pour ce faire, utilisez la commande : 
+
 $ dd if=$SRC/bin/$ISO of=/dev/$DEV
 
 Où : 
 $SRC est le chemin pour le dossier src
+
 $ISO est le nom de l'image disque .iso
+
 $DEV est le nom du dispositif de bloc cible
+
+
 
 Démarrage
 
+
 Allumer un système d'exploitation n'est pas une tâche facile. Pour comprendre pourquoi, nous devons d'abord comprendre le processus de démarrage de la plupart des appareils x86. Ce chapitre sera dédié à la compréhension de ce processus.
+
 Quand un utilisateur allume un appareil, un circuit commence à alimenter du courant dans les différentes parties qui composent le dit appareil. Ceci va déclencher un contrôle de matériel non blocable appelé POST (Power On Self Test), qui va (en gros) s'assurer que tout est OK (surtout pour checker le système d'expédition de circuit. Mais après que le POST est fini, qu'est-ce qu'il se passe ?
+
 Maintenant, presque rien n'est initialisé. Le(s) unité(s) de traitement fonctionnent toujours en mode réel 16 bits, rien n'est chargé, et quelque chose doit  trouver une solution aux premières étapes de l'initialisation. Ce bout de logiciel est appelé le BIOS (Basic Input Output System). Même si ceci est remplacé par un étalon beaucoup plus complexe appelé UEFI (Unified Extended Firmware Interface), presque tous les appareils x86 ont un BIOS. Le logiciel BIOS est situé sur une puce de mémoire flash sur l'appareil, ce qui veut dire que c'est presque impossible de jouer avec (même si dans les ordinateurs modernes ont souvent des façons pour mettre à jour le logiciel BIOS). Le BIOS va trouver des solutions à quelques étapes simples : Dire à l'ordinateur quels appareils sont connectées, combien de mémoire est disponible, coordonner différentes parties ensemble, etc. Après avoir fait cela, presque tout est près pour allumer le système d'exploitation.
+
 L'ordinateur va chercher un périphérique d'amorçage. Un périphérique d'amorçage est un périphérique dont les octets situés sur les coordonnées 0x1FE et 0x1FF figurent la valeur 0x55AA. Le BIOS va chercher pour trouver un appareil comme cela. La première qu'il va trouver s'appelle le périphérique sélectionné, et ses premiers 512 octets seront copiés à l'adresse mémoire 0x7C00 avant d'être exécuté. Et à ce moment là, l'exécution du programme commence.
+
 Pourtant, DxBorks n'est pas situé sur le secteur de démarrage (les 512 premiers octets de l'appareil). Plutôt, un programme appelé bootloader est utilisé dans ce secteur. DxBorks utilise GRUB2, un bootloader bien connu utilisé par presque tous les dérivés d'UNIX aujourd'hui. Ce programme va initialiser beaucoup de caractéristiques utiles pour nous, comme passer les unités de traitement de 16 bits mode réel à 32 bits mode protégé. GRUB2 va ensuite permettre à l'utilisateur de sélectionner le système d'exploitation qu'il veut démarrer. Notez que l'utilisateur ne pourra pas revenir en arrière lorsque l'OS est choisi sans redémarrer l'appareil. Notez aussi que même si GRUB2 permet à l'utilisateur de choisir un OS, cette fonctionnalité a été désactivée sur le CD d'allumage DxBorks, parce que DxBorks est le seul OS qui n'existe pas sur l'appareil.
+
 Le langage de programmation C, utilisé pour DxBorks, ne génère pas des binaires "linéaires" (comme les programmes .COM sous Microsoft DOS). Voilà le contenu du dossier linker.ld, décrivant la disposition du Kernel dans la mémoire :
-Annexe 2
+
+(Annexe 2)
+
+
 Ce code est utilisé comme un patron pour l'éditeur de liens, lui disant à quoi le programme va ressembler à partir du point de vue de la mémoire. La ligne . = 0x100000; est celle qui nous importe le plus : elle dit à l'éditeur de liens que le programme sera chargé à l'adresse 0x100000 dans la mémoire. Nous avons donc la disposition de mémoire suivante :
-Annexe 3
+
+(Annexe 3)
+
+
 L'exécution commencera à l'adresse Ox100000. Pourtant, comme dit précédemment, le langage de programmation en C ne génère pas des fichiers binaires linéaires. Cela veut dire que le point d'entrée ne sera pas situé à l'adresse 0x100000, où l'exécution est supposée commencer. Nous devons donc utiliser le code assembleur qui sera situé à cette adresse et qui va transférer l'exécution à notre point d'entrée désigné. Ce code assembleur est appelé le boot code. Le dossier $SRC/kernel/arch/i386/boot/boot.s contient ce code.
-Annexe 4
+
+(Annexe 4)
+
+
 La première ligne est utilisée pour indiquer que l'étiquette _start est une étiquette globale, c'est à dire qu'elle peut être appelée globalement (de n'importe quel dossier). La seconde ligne indique que l'étiquette _start est en fait une fonction. Les lignes 4 à 14 sont spéciales : elles sont nécessaires pour le multiboot standard. Elles donnent l'information par rapport à comment le Kernel devrait démarrer. 
+
 Les lignes 16 à 19 et 25 sont dédiés à mettre en place la mémoire de pile. Ceci est nécessaire pour utiliser les instructions push et pop, vitales à tout programme assez sophistiqué. Notez que l'étiquette pile est située après avoir sauté 65536 octets, parce que dans l'architecture x86, la pile croît "vers le bas"
+
 Nous procédons donc vers le véritable code de démarrage :
-Annexe 5
+
+(Annexe 5)
+
+
 Ce code constitue la partie la plus importante de tout l'OS. Sans lui, rien ne pourrait démarrer, et même si on pouvait démarrer des fonctions basiques comme utiliser le clavier ou les ports série, cela échouerait misérablement. Utiliser les instructions push/pop aurait aussi des résultats vagues, car la value contenue dans le pointeur de pile est soit peanuts soit nulle. Voilà une traduction algorithmique : 
-Annexe 6
+
+(Annexe 6)
 
 
 
