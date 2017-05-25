@@ -1,6 +1,6 @@
 Préface
 
-Le système d'exploitation DxBorks est une longue quête de succès d'un an. Né de l'envie de créer un Kernel minimaliste pour les appareils x86, l'OS a évolué en un projet avec pleins de possibilités, tout en gardant sa "preuve de concept" en tant qu'autre chose qu'un OS commercial. Agréé sous la License Publique Générale (GPL) GPU v3, tout le monde est libre d'utiliser cet OS comme ils le souhaitent, dans la mesure où ils n'empêchent pas d'autres utilisateurs de jouir de la même liberté.
+Le système d'exploitation DxBorks est une longue quête de succès d'un an. Né de l'envie de créer un kernel minimaliste pour les appareils x86, l'OS a évolué en un projet avec pleins de possibilités, tout en gardant sa "preuve de concept" en tant qu'autre chose qu'un OS commercial. Agréé sous la License Publique Générale (GPL) GPU v3, tout le monde est libre d'utiliser cet OS comme ils le souhaitent, dans la mesure où ils n'empêchent pas d'autres utilisateurs de jouir de la même liberté.
 
 DxBorks est un logiciel assez minimaliste. Il suit un paradigme important à nos yeux : KISS (Keep It Simple, Stupid !)/(Garde ça Simple, Imbécile); un paradigme utilisé par beaucoup de développeurs, ingénieurs et autres individus qui conçoivent du hardware/software complexe, dont l'équipe de développement d'Arch Linux ou les ingénieurs de l'armée Américaine.
 
@@ -96,7 +96,7 @@ Vous pouvez aussi prendre connaissance de l'arbre de répertoire suivant :
 	│     └- ...
 	└-... 
 
-Après avoir compilé le programme, une image disque .iso sera produite et stockée dans le répertoire /src/bin. Cette image peut soit être démarrée directement en utilisant le cible make test, ou copiée sur un objet (physique) pour la démarrer sur une autre machine. Pour ce faire, utilisez la commande : 
+Après avoir compilé le programme, une image disque .iso sera produite et stockée dans le répertoire /src/bin. Cette image peut soit être démarrée directement en utilisant le cible make test, ou copiée sur un périphérique (physique) pour la démarrer sur une autre machine. Pour ce faire, utilisez la commande : 
 
 $ dd if=$SRC/bin/$ISO of=/dev/$DEV
 
