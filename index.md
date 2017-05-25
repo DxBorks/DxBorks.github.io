@@ -16,7 +16,7 @@ Comme indiqué plus haut, ce document, le Kernel DxBorks, son image disque, et l
 
 [Instruction set](https://dxborks.github.io/instructions.html)
 
-[Mentions légales](https://github.com/DxBorks/DxBorks.github.io/blob/master/LICENSE)
+[Mentions légales](https://github.com/DxBorks/DxBorks/blob/master/LICENSE)
 
 
 
