@@ -78,8 +78,23 @@ $ make test     Lance une machine virtuelle qemu faisant tourner DxBorks
 
 Vous pouvez aussi prendre connaissance de l'arbre de répertoire suivant : 
 
-(Annexe 1)
-
+	src			Repertoire principal
+	├- bin			Fichiers binaire
+	│  ├- isofiles		Fichiers image disque
+	│  └- ...		Fichiers compilés et image disque .iso
+	├- kernel		Code source Kernel
+	│  ├- arch		Fichiers source (.s et .c)
+	│  │  └- i386		Fichiers source i386 
+	│  │     ├- libk	sources (kernel library) libk
+	│  │     │  └- ...
+	│  │     ├- boot	Code qui permet à DxBorks de démarrer
+	│  │     │  └- ...
+	│  │     └- ...
+	│  └- include		En-têtes C (.h)
+	│     ├- kernel		En-têtes Kernel 
+	│     │  └- ...				
+	│     └- ...
+	└-... 
 
 Après avoir compilé le programme, une image disque .iso sera produite et stockée dans le répertoire /src/bin. Cette image peut soit être démarrée directement en utilisant le cible make test, ou copiée sur un objet (physique) pour la démarrer sur une autre machine. Pour ce faire, utilisez la commande : 
 
@@ -111,65 +126,6 @@ Pourtant, DxBorks n'est pas situé sur le secteur de démarrage (les 512 premier
 
 Le langage de programmation C, utilisé pour DxBorks, ne génère pas des binaires "linéaires" (comme les programmes .COM sous Microsoft DOS). Voilà le contenu du dossier linker.ld, décrivant la disposition du Kernel dans la mémoire :
 
-(Annexe 2)
-
-
-Ce code est utilisé comme un patron pour l'éditeur de liens, lui disant à quoi le programme va ressembler à partir du point de vue de la mémoire. La ligne . = 0x100000; est celle qui nous importe le plus : elle dit à l'éditeur de liens que le programme sera chargé à l'adresse 0x100000 dans la mémoire. Nous avons donc la disposition de mémoire suivante :
-
-(Annexe 3)
-
-
-L'exécution commencera à l'adresse Ox100000. Pourtant, comme dit précédemment, le langage de programmation en C ne génère pas des fichiers binaires linéaires. Cela veut dire que le point d'entrée ne sera pas situé à l'adresse 0x100000, où l'exécution est supposée commencer. Nous devons donc utiliser le code assembleur qui sera situé à cette adresse et qui va transférer l'exécution à notre point d'entrée désigné. Ce code assembleur est appelé le boot code. Le dossier $SRC/kernel/arch/i386/boot/boot.s contient ce code.
-
-(Annexe 4)
-
-
-La première ligne est utilisée pour indiquer que l'étiquette _start est une étiquette globale, c'est à dire qu'elle peut être appelée globalement (de n'importe quel dossier). La seconde ligne indique que l'étiquette _start est en fait une fonction. Les lignes 4 à 14 sont spéciales : elles sont nécessaires pour le multiboot standard. Elles donnent l'information par rapport à comment le Kernel devrait démarrer. 
-
-Les lignes 16 à 19 et 25 sont dédiés à mettre en place la mémoire de pile. Ceci est nécessaire pour utiliser les instructions push et pop, vitales à tout programme assez sophistiqué. Notez que l'étiquette pile est située après avoir sauté 65536 octets, parce que dans l'architecture x86, la pile croît "vers le bas"
-
-Nous procédons donc vers le véritable code de démarrage :
-
-(Annexe 5)
-
-
-Ce code constitue la partie la plus importante de tout l'OS. Sans lui, rien ne pourrait démarrer, et même si on pouvait démarrer des fonctions basiques comme utiliser le clavier ou les ports série, cela échouerait misérablement. Utiliser les instructions push/pop aurait aussi des résultats vagues, car la value contenue dans le pointeur de pile est soit peanuts soit nulle. Voilà une traduction algorithmique : 
-
-(Annexe 6)
-
-
-
-
-
-
-
-
-
-
-
-Annexe 1 : 
-
-
-	src			Repertoire principal
-	├- bin			Fichiers binaire
-	│  ├- isofiles		Fichiers image disque
-	│  └- ...		Fichiers compilés et image disque .iso
-	├- kernel		Code source Kernel
-	│  ├- arch		Fichiers source (.s et .c)
-	│  │  └- i386		Fichiers source i386 
-	│  │     ├- libk	sources (kernel library) libk
-	│  │     │  └- ...
-	│  │     ├- boot	Code qui permet à DxBorks de démarrer
-	│  │     │  └- ...
-	│  │     └- ...
-	│  └- include		En-têtes C (.h)
-	│     ├- kernel		En-têtes Kernel 
-	│     │  └- ...				
-	│     └- ...
-	└-... 
-
-Annexe 2 : 
-
 	1	ENTRY(_start)
 	2	
 	3	SECTIONS
@@ -199,7 +155,7 @@ Annexe 2 :
 	27	  }
 	28	}
 
-Annexe 3 : 
+Ce code est utilisé comme un patron pour l'éditeur de liens, lui disant à quoi le programme va ressembler à partir du point de vue de la mémoire. La ligne . = 0x100000; est celle qui nous importe le plus : elle dit à l'éditeur de liens que le programme sera chargé à l'adresse 0x100000 dans la mémoire. Nous avons donc la disposition de mémoire suivante :
 
 	ADRESSE			DESCRIPTION
 
@@ -207,8 +163,7 @@ Annexe 3 :
 	...
 	0x??????			Fin du programme 
 
-
-Annexe 4 : 
+L'exécution commencera à l'adresse Ox100000. Pourtant, comme dit précédemment, le langage de programmation en C ne génère pas des fichiers binaires linéaires. Cela veut dire que le point d'entrée ne sera pas situé à l'adresse 0x100000, où l'exécution est supposée commencer. Nous devons donc utiliser le code assembleur qui sera situé à cette adresse et qui va transférer l'exécution à notre point d'entrée désigné. Ce code assembleur est appelé le boot code. Le dossier $SRC/kernel/arch/i386/boot/boot.s contient ce code.
 
 	1	.global _start	
 	2	.type   _start, @function
@@ -241,9 +196,11 @@ Annexe 4 :
 	29
 	30	.size _start, . - _start
 
+La première ligne est utilisée pour indiquer que l'étiquette _start est une étiquette globale, c'est à dire qu'elle peut être appelée globalement (de n'importe quel dossier). La seconde ligne indique que l'étiquette _start est en fait une fonction. Les lignes 4 à 14 sont spéciales : elles sont nécessaires pour le multiboot standard. Elles donnent l'information par rapport à comment le Kernel devrait démarrer. 
 
+Les lignes 16 à 19 et 25 sont dédiés à mettre en place la mémoire de pile. Ceci est nécessaire pour utiliser les instructions push et pop, vitales à tout programme assez sophistiqué. Notez que l'étiquette pile est située après avoir sauté 65536 octets, parce que dans l'architecture x86, la pile croît "vers le bas"
 
-Annexe 5 : 
+Nous procédons donc vers le véritable code de démarrage :
 
 	23	_start:
 	24	  cli
@@ -252,8 +209,8 @@ Annexe 5 :
 	27	  sti
 	28	  hlt
 
+Ce code constitue la partie la plus importante de tout l'OS. Sans lui, rien ne pourrait démarrer, et même si on pouvait démarrer des fonctions basiques comme utiliser le clavier ou les ports série, cela échouerait misérablement. Utiliser les instructions push/pop aurait aussi des résultats vagues, car la value contenue dans le pointeur de pile est soit peanuts soit nulle. Voilà une traduction algorithmique : 
 
-Annexe 6 : 
 
 	START
 		CLEAR_INTERRUPT_FLAGS
@@ -261,4 +218,3 @@ Annexe 6 :
 		CALL THE FUNCTION kernel_main
 		SET_INTERRUPT_FLAGS
 		HALT
-
