@@ -43,12 +43,12 @@ Faire ceci téléchargera un dossier dans le répertoire de travail actuel conte
 Installer DxBorks
 
 
-DxBorks, en tant qu'OS en open source (ou plus particulièrement gratuit), peut être compilé et installé par l'utilisateur, alors que la plupart des autres systèmes d'exploitation sont distribués avec un logiciel d'installation automatisée. Comme cela contredit l'aspect minimaliste de DxBorks, aucun logiciel d'installation automatisée ne sera fourni
+DxBorks, en tant qu'OS en open source (ou plus particulièrement libre), peut être compilé et installé par l'utilisateur, alors que la plupart des autres systèmes d'exploitation sont distribués avec un logiciel d'installation automatisée. Comme cela contredit l'aspect minimaliste de DxBorks, aucun logiciel d'installation automatisée ne sera fourni
 Compiler DxBorks demande plusieurs composants différentes, dont :
 
     Un système hôte UNIX (on utilisera Arch Linux)
     GNU make
-    Le GCC (Gnu Compiler Collection) compilateur en C (gcc)
+    Le compilateur GNU C (gcc / GNU Compiler Collection) 
     L'assembleur GNU standard (as)
     Le chargeur d'amorçage (bootloader) GRUB2
     Une connection internet :)
@@ -150,20 +150,20 @@ Ce code constitue la partie la plus importante de tout l'OS. Sans lui, rien ne p
 Annexe 1 : 
 
 
-	src						Repertoire principal
-	├- bin					Fichiers binaire
-	│  ├- isofiles				Fichiers image disque
-	│  └- ...					Fichiers compilés et image disque .iso
-	├- kernel					Code source Kernel
-	│  ├- arch				Fichiers source (.s et .c)
-	│  │  └- i386				Fichiers source i386 
-	│  │     ├- libk			sources (kernel library) libk
+	src			Repertoire principal
+	├- bin			Fichiers binaire
+	│  ├- isofiles		Fichiers image disque
+	│  └- ...		Fichiers compilés et image disque .iso
+	├- kernel		Code source Kernel
+	│  ├- arch		Fichiers source (.s et .c)
+	│  │  └- i386		Fichiers source i386 
+	│  │     ├- libk	sources (kernel library) libk
 	│  │     │  └- ...
-	│  │     ├- boot			Code qui permet à DxBorks de démarrer
+	│  │     ├- boot	Code qui permet à DxBorks de démarrer
 	│  │     │  └- ...
 	│  │     └- ...
-	│  └- include				En-têtes C (.h)
-	│     ├- kernel			En-têtes Kernel 
+	│  └- include		En-têtes C (.h)
+	│     ├- kernel		En-têtes Kernel 
 	│     │  └- ...				
 	│     └- ...
 	└-... 
