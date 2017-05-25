@@ -211,7 +211,6 @@ Nous procédons donc vers le véritable code de démarrage :
 
 Ce code constitue la partie la plus importante de tout l'OS. Sans lui, rien ne pourrait démarrer, et même si on pouvait démarrer des fonctions basiques comme utiliser le clavier ou les ports série, cela échouerait misérablement. Utiliser les instructions push/pop aurait aussi des résultats vagues, car la value contenue dans le pointeur de pile est soit peanuts soit nulle. Voilà une traduction algorithmique : 
 
-
 	START
 		CLEAR_INTERRUPT_FLAGS
 		MOVE $stack TO %esp
