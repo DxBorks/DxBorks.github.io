@@ -1,15 +1,14 @@
 Préface
 
-Le système d'exploitation DxBorks est une longue quête de succès d'un an. Né de l'envie de créer un kernel minimaliste pour les appareils x86, l'OS a évolué en un projet avec pleins de possibilités, tout en gardant sa "preuve de concept" en tant qu'autre chose qu'un OS commercial. Agréé sous la License Publique Générale (GPL) GPU v3, tout le monde est libre d'utiliser cet OS comme ils le souhaitent, dans la mesure où ils n'empêchent pas d'autres utilisateurs de jouir de la même liberté.
+Le système d'exploitation DxBorks est une longue quête de succès. Né de l'envie de créer un kernel minimaliste pour les appareils x86, l'OS a évolué en un projet avec pleins de possibilités, tout en gardant son esprit de "preuve de concept" en tant qu'un OS non commercial. Agréé sous la License Publique Générale (GPL) GPU v3, tout le monde est libre d'utiliser cet OS comme ils le souhaitent, dans la mesure où ils n'empêchent pas d'autres utilisateurs de jouir de la même liberté.
 
 DxBorks est un logiciel assez minimaliste. Il suit un paradigme important à nos yeux : KISS (Keep It Simple, Stupid !)/(Garde ça Simple, Imbécile); un paradigme utilisé par beaucoup de développeurs, ingénieurs et autres individus qui conçoivent du hardware/software complexe, dont l'équipe de développement d'Arch Linux ou les ingénieurs de l'armée Américaine.
 
 Ce paradigme donne la priorité à la simplicité plutôt qu'à la complexité : un bout de code devrait être assez facile à comprendre pour qu'il n'y ait pas l'usage d'un nombre trop important de commentaires. La "Philosophie UNIX" a aussi été un aspect très fondamental du projet : un outil devrait servir à une seule chose, mais le faire bien. Dans notre cas, les outils sont les fonctions, variables, algorithmes, etc...
 
-Pour résumer, DxBorks est un autre Kernel inspiré par UNIX, tout en gardant son aspect de projet scolaire.
+Pour résumer, DxBorks n'est qu'un autre Kernel inspiré par UNIX, assumant son aspect de projet scolaire.
 
-
-Comme indiqué plus haut, ce document, le Kernel DxBorks, son image disque, et les contenus de son répertoire en ligne sont agrées sous la licence GNU GPL v3. Référez vous au fichier fourni pour plus d'infomations concernant la licence. Pour plus d'informations, contactez "garuda1@protomail.com"
+Comme indiqué plus haut, ce document, le kernel DxBorks, son image disque, et les contenus de son répertoire en ligne sont agrées sous la licence GNU GPL v3. Référez vous au fichier fourni pour plus d'infomations concernant la licence. Pour plus d'informations, contactez garuda1@protomail.com
 
 
 [Download DxBorks](https://github.com/DxBorks/DxBorks)
@@ -196,7 +195,7 @@ L'exécution commencera à l'adresse Ox100000. Pourtant, comme dit précédemmen
 	29
 	30	.size _start, . - _start
 
-La première ligne est utilisée pour indiquer que l'étiquette _start est une étiquette globale, c'est à dire qu'elle peut être appelée globalement (de n'importe quel dossier). La seconde ligne indique que l'étiquette _start est en fait une fonction. Les lignes 4 à 14 sont spéciales : elles sont nécessaires pour le multiboot standard. Elles donnent l'information par rapport à comment le Kernel devrait démarrer. 
+La première ligne est utilisée pour indiquer que le label _start est un label global, c'est à dire qu'il peut être appelé globalement (de n'importe quel fichier). La seconde ligne indique que le label _start est en fait une fonction. Les lignes 4 à 14 sont spéciales : elles sont requises par le standard multiboot. Elles donnent des informations par rapport à comment le kernel devrait démarrer. 
 
 Les lignes 16 à 19 et 25 sont dédiés à mettre en place la mémoire de pile. Ceci est nécessaire pour utiliser les instructions push et pop, vitales à tout programme assez sophistiqué. Notez que l'étiquette pile est située après avoir sauté 65536 octets, parce que dans l'architecture x86, la pile croît "vers le bas"
 
@@ -209,7 +208,7 @@ Nous procédons donc vers le véritable code de démarrage :
 	27	  sti
 	28	  hlt
 
-Ce code constitue la partie la plus importante de tout l'OS. Sans lui, rien ne pourrait démarrer, et même si on pouvait démarrer des fonctions basiques comme utiliser le clavier ou les ports série, cela échouerait misérablement. Utiliser les instructions push/pop aurait aussi des résultats vagues, car la value contenue dans le pointeur de pile est soit peanuts soit nulle. Voilà une traduction algorithmique : 
+Ce code constitue la partie la plus importante de tout l'OS. Sans lui, rien ne pourrait démarrer, et même si on pouvait démarrer des fonctions basiques comme utiliser le clavier ou les ports série, cela échouerait misérablement. Utiliser les instructions push/pop aurait aussi des résultats vagues, car la valeur contenue dans le pointeur de pile est soit indéterminée soit nulle. Voilà une traduction algorithmique : 
 
 	START
 		CLEAR_INTERRUPT_FLAGS
