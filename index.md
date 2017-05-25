@@ -124,7 +124,7 @@ L'ordinateur va chercher un périphérique d'amorçage. Un périphérique d'amor
 
 Pourtant, DxBorks n'est pas situé sur le secteur de démarrage (les 512 premiers octets de l'appareil). Plutôt, un programme appelé bootloader est utilisé dans ce secteur. DxBorks utilise GRUB2, un bootloader bien connu utilisé par presque tous les dérivés d'UNIX aujourd'hui. Ce programme va initialiser beaucoup de caractéristiques utiles pour nous, comme passer les unités de traitement de 16 bits mode réel à 32 bits mode protégé. GRUB2 va ensuite permettre à l'utilisateur de sélectionner le système d'exploitation qu'il veut démarrer. Notez que l'utilisateur ne pourra pas revenir en arrière lorsque l'OS est choisi sans redémarrer l'appareil. Notez aussi que même si GRUB2 permet à l'utilisateur de choisir un OS, cette fonctionnalité a été désactivée sur le CD d'allumage DxBorks, parce que DxBorks est le seul OS qui n'existe pas sur l'appareil.
 
-Le langage de programmation C, utilisé pour DxBorks, ne génère pas des binaires "linéaires" (comme les programmes .COM sous Microsoft DOS). Voilà le contenu du dossier linker.ld, décrivant la disposition du Kernel dans la mémoire :
+Le langage de programmation C, utilisé pour DxBorks, ne génère pas des binaires "linéaires" (comme les programmes .COM sous Microsoft DOS). Voilà le contenu du fichier linker.ld, décrivant la disposition du Kernel dans la mémoire :
 
 	1	ENTRY(_start)
 	2	
