@@ -170,34 +170,34 @@ Annexe 1 :
 
 Annexe 2 : 
 
-1	ENTRY(_start)
-2	
-3	SECTIONS
-4	{
-5	  . = 0x100000;
-6	
-7	  .text BLOCK(4K) : ALIGN(4K)
-8	  {
-9	    *(.multiboot_header)
-10	    *(.text)
-11	  }
-12	
-13	  .rodata BLOCK(4K) : ALIGN(4K)
-14	  {
-15	    *(.rodata)
-16	  }
-17	
-18	  .data BLOCK(4K) : ALIGN(4K)
-19	  {
-20	    *(.data)
-21	  }
-22	
-23	  .bss BLOCK(4K) : ALIGN(4K)
-24	  {
-25	    *(COMMON)
-26	    *(.bss)
-27	  }
-28	}
+	1	ENTRY(_start)
+	2	
+	3	SECTIONS
+	4	{
+	5	  . = 0x100000;
+	6	
+	7	  .text BLOCK(4K) : ALIGN(4K)
+	8	  {
+	9	    *(.multiboot_header)
+	10	    *(.text)
+	11	  }
+	12	
+	13	  .rodata BLOCK(4K) : ALIGN(4K)
+	14	  {
+	15	    *(.rodata)
+	16	  }
+	17	
+	18	  .data BLOCK(4K) : ALIGN(4K)
+	19	  {
+	20	    *(.data)
+	21	  }
+	22	
+	23	  .bss BLOCK(4K) : ALIGN(4K)
+	24	  {
+	25	    *(COMMON)
+	26	    *(.bss)
+	27	  }
+	28	}
 
 Annexe 3 : 
 
@@ -210,55 +210,55 @@ Annexe 3 :
 
 Annexe 4 : 
 
-1	.global _start	
-2	.type   _start, @function
-3	
-4	.set ALIGN,    1 << 0
-5	.set MEMINFO,  1 << 1
-6	.set FLAGS,    (ALIGN | MEMINFO)
-7	.set MAGIC,    0x1BADB002
-8	.set CHECKSUM, -(MAGIC + FLAGS)
-9	
-10	.section .multiboot_header
-11	.align 4
-12	.long MAGIC
-13	.long FLAGS
-14	.long CHECKSUM
-15	
-16	.section .bss
-17	.align 16
-18	.skip 65536
-19	stack:
-20	
-21	.align 4
-22	.section .text
-23	_start:
-24	  cli
-25	  movl $stack, %esp
-26	  call kernel_main
-27	  sti
-28	  hlt
-
-.size _start, . - _start
+	1	.global _start	
+	2	.type   _start, @function
+	3	
+	4	.set ALIGN,    1 << 0
+	5	.set MEMINFO,  1 << 1
+	6	.set FLAGS,    (ALIGN | MEMINFO)
+	7	.set MAGIC,    0x1BADB002
+	8	.set CHECKSUM, -(MAGIC + FLAGS)
+	9	
+	10	.section .multiboot_header
+	11	.align 4
+	12	.long MAGIC
+	13	.long FLAGS
+	14	.long CHECKSUM
+	15	
+	16	.section .bss
+	17	.align 16
+	18	.skip 65536
+	19	stack:
+	20	
+	21	.align 4
+	22	.section .text
+	23	_start:
+	24	  cli
+	25	  movl $stack, %esp
+	26	  call kernel_main
+	27	  sti
+	28	  hlt
+	29
+	30	.size _start, . - _start
 
 
 
 Annexe 5 : 
 
-23	_start:
-24	  cli
-25	  movl $stack, %esp
-26	  call kernel_main
-27	  sti
-28	  hlt
+	23	_start:
+	24	  cli
+	25	  movl $stack, %esp
+	26	  call kernel_main
+	27	  sti
+	28	  hlt
 
 
 Annexe 6 : 
 
-START
-	CLEAR_INTERRUPT_FLAGS
-	MOVE $stack TO %esp
-	CALL THE FUNCTION kernel_main
-	SET_INTERRUPT_FLAGS
-	HALT
+	START
+		CLEAR_INTERRUPT_FLAGS
+		MOVE $stack TO %esp
+		CALL THE FUNCTION kernel_main
+		SET_INTERRUPT_FLAGS
+		HALT
 
