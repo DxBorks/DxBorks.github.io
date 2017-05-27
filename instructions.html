@@ -60,12 +60,12 @@
 0x17      cjmp        if (flag) %ip = C
 0x18      stop        stops execution
 0x19      eq          flag = (%a == %b ? 1 : 0)
-0x19      neq         flag = (%a != %b ? 1 : 0)
-0x19      less        flag = (%a &lt;= %b ? 1 : 0)
-0x19      great       flag = (%a &gt;= %b ? 1 : 0)
-0x1a      inc         ++(%a)
+0x1a      neq         flag = (%a != %b ? 1 : 0)
+0x1b      less        flag = (%a &lt;= %b ? 1 : 0)
+0x1c      great       flag = (%a &gt;= %b ? 1 : 0)
+0x1d      inc         ++(%a)
 0x1e      dec         --(%a)
-0x22      disp        print(mem[C])
+0x1f      disp        print(mem[C])
 
 Special instructions:
 
